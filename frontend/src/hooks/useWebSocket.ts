@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import wsService from '../services/websocket'
-import { ChatMessage, ContextChunk } from '../services/types'
+import { ChatMessage } from '../services/types'
 
 export function useWebSocket(sessionId?: string, userId?: string) {
   const [isConnected, setIsConnected] = useState(false)
@@ -131,7 +131,7 @@ export function useWebSocket(sessionId?: string, userId?: string) {
       console.log('Joined session:', data.session_name)
     }
 
-    const handleError = (data: any) => {
+    const handleServerError = (data: any) => {
       setError(data.message)
     }
 
@@ -144,7 +144,7 @@ export function useWebSocket(sessionId?: string, userId?: string) {
     wsService.on('ai_message_complete', handleAIMessageComplete)
     wsService.on('typing_indicator', handleTypingIndicator)
     wsService.on('session_joined', handleSessionJoined)
-    wsService.on('error', handleError)
+    wsService.on('error', handleServerError)
 
     // Cleanup
     return () => {

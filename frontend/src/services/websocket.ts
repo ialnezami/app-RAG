@@ -2,14 +2,7 @@ import {
   WebSocketMessage,
   JoinSessionMessage,
   SendMessageMessage,
-  TypingMessage,
-  MessageReceivedMessage,
-  AIStreamingMessage,
-  AIMessageCompleteMessage,
-  TypingIndicatorMessage,
-  SessionJoinedMessage,
-  SessionCreatedMessage,
-  ErrorMessage
+  TypingMessage
 } from './types'
 
 type WebSocketEventHandler = (data: any) => void

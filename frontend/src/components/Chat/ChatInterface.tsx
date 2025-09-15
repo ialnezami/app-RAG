@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Plus, Settings, Users } from 'lucide-react'
+import { Plus, Users } from 'lucide-react'
 import { useAppStore } from '../../store'
 import { useWebSocket } from '../../hooks/useWebSocket'
 import { useApi } from '../../hooks/useApi'
@@ -8,7 +8,6 @@ import MessageInput from './MessageInput'
 import TypingIndicator from './TypingIndicator'
 import Button from '../Common/Button'
 import Modal from '../Common/Modal'
-import Loading from '../Common/Loading'
 
 interface ChatInterfaceProps {
   sessionId?: string
@@ -24,9 +23,7 @@ const ChatInterface: React.FC<ChatInterfaceProps> = ({ sessionId }) => {
     streamingContent,
     typingUsers,
     sendMessage,
-    sendTyping,
-    connect,
-    disconnect
+    sendTyping
   } = useWebSocket(sessionId)
 
   const [isCreatingSession, setIsCreatingSession] = useState(false)

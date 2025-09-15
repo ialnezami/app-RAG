@@ -134,7 +134,7 @@ const DocumentViewer: React.FC<DocumentViewerProps> = ({
             
             <div className="space-y-2">
               {Object.entries(document.metadata)
-                .filter(([key, value]) => showFullMetadata || ['title', 'author', 'pages'].includes(key))
+                .filter(([key]) => showFullMetadata || ['title', 'author', 'pages'].includes(key))
                 .map(([key, value]) => (
                   <div key={key} className="flex justify-between text-sm">
                     <span className="text-gray-600 capitalize">

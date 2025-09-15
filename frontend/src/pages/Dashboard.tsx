@@ -6,7 +6,6 @@ import {
   Users, 
   Activity,
   TrendingUp,
-  Clock,
   Plus
 } from 'lucide-react'
 import { useAppStore } from '../store'

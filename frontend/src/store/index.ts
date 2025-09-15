@@ -39,7 +39,7 @@ interface AppState {
 export const useAppStore = create<AppState>()(
   devtools(
     persist(
-      (set, get) => ({
+      (set) => ({
         // Initial state
         profiles: [],
         documents: [],
@@ -133,7 +133,7 @@ interface ChatState {
 
 export const useChatStore = create<ChatState>()(
   devtools(
-    (set, get) => ({
+    (set) => ({
       // Initial state
       sessions: [],
       currentSession: null,
@@ -204,7 +204,7 @@ interface DocumentState {
 
 export const useDocumentStore = create<DocumentState>()(
   devtools(
-    (set, get) => ({
+    (set) => ({
       // Initial state
       documents: [],
       uploadProgress: new Map(),
@@ -277,7 +277,7 @@ interface ProfileState {
 export const useProfileStore = create<ProfileState>()(
   devtools(
     persist(
-      (set, get) => ({
+      (set) => ({
         // Initial state
         profiles: [],
         currentProfile: null,

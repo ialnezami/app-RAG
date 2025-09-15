@@ -7,7 +7,6 @@ import {
   Users, 
   Settings, 
   X,
-  Plus,
   Activity
 } from 'lucide-react'
 import { useAppStore } from '../../store'
@@ -19,7 +18,7 @@ interface SidebarProps {
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const location = useLocation()
-  const { chatSessions, currentProfile } = useAppStore()
+  const { chatSessions } = useAppStore()
 
   const navigation = [
     { name: 'Dashboard', href: '/', icon: Home },
