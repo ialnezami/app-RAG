@@ -20,6 +20,7 @@
     "socket.io-client": "^4.7.4",
     "zustand": "^4.4.7",
     "lucide-react": "^0.294.0",
+    "react-hot-toast": "^2.4.1",
     "@headlessui/react": "^1.7.17",
     "clsx": "^2.0.0",
     "tailwind-merge": "^2.0.0"
