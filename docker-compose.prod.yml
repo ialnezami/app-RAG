@@ -1,0 +1,66 @@
+version: '3.8'
+
+services:
+  db:
+    environment:
+      - POSTGRES_HOST=db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/prod-init.sql:/docker-entrypoint-initdb.d/prod-init.sql:ro
+    restart: always
+    deploy:
+      resources:
+        limits:
+          memory: 1G
+        reservations:
+          memory: 512M
+
+  backend:
+    environment:
+      - DEBUG=false
+      - RELOAD=false
+      - LOG_LEVEL=INFO
+      - ENVIRONMENT=production
+    volumes:
+      - uploaded_files:/app/uploads
+    restart: always
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --workers 4
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+        reservations:
+          memory: 1G
+
+  frontend:
+    environment:
+      - VITE_API_BASE_URL=https://your-domain.com/api
+      - VITE_WS_URL=wss://your-domain.com/ws
+      - VITE_DEV_MODE=false
+    volumes:
+      - ./frontend/dist:/app/dist
+    restart: always
+    command: npm run build && npm run preview -- --host 0.0.0.0 --port 3000
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+        reservations:
+          memory: 256M
+
+  nginx:
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - ./frontend/dist:/usr/share/nginx/html:ro
+    restart: always
+    profiles: []
+
+volumes:
+  postgres_data:
+    driver: local
+  uploaded_files:
+    driver: local
