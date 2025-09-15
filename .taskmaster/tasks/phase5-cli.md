@@ -1,7 +1,7 @@
 # Phase 5: CLI Tools
 
 **Phase:** 5  
-**Status:** Pending  
+**Status:** Completed  
 **Priority:** Medium  
 **Estimated Duration:** 1-2 weeks  
 **Dependencies:** Phase 3 (Backend Development)
@@ -12,25 +12,25 @@ Develop comprehensive CLI tools for system management, document ingestion, profi
 ## Tasks
 
 ### 5.1 CLI Structure
-- [ ] Create cli/main.py (CLI entry point)
-- [ ] Set up cli/commands/ directory
-- [ ] Create commands/init.py (database initialization)
-- [ ] Create commands/ingest.py (document ingestion)
-- [ ] Create commands/profiles.py (profile management)
-- [ ] Create commands/reset.py (data reset commands)
-- [ ] Set up cli/utils/ directory
-- [ ] Create utils/file_processing.py
+- [x] Create cli/main.py (CLI entry point)
+- [x] Set up cli/commands/ directory
+- [x] Create commands/init.py (database initialization)
+- [x] Create commands/ingest.py (document ingestion)
+- [x] Create commands/profiles.py (profile management)
+- [x] Create commands/reset.py (data reset commands)
+- [x] Set up cli/utils/ directory
+- [x] Create utils/file_processing.py
 
 ### 5.2 CLI Commands Implementation
-- [ ] Implement init-db command
-- [ ] Implement init-profiles command
-- [ ] Implement status command
-- [ ] Implement profiles list/create/update/delete commands
-- [ ] Implement ingest command (single file)
-- [ ] Implement ingest-folder command (recursive)
-- [ ] Implement documents list/delete commands
-- [ ] Implement reset-profile/reset-all commands
-- [ ] Implement config validate/test-providers commands
+- [x] Implement init-db command
+- [x] Implement init-profiles command
+- [x] Implement status command
+- [x] Implement profiles list/create/update/delete commands
+- [x] Implement ingest command (single file)
+- [x] Implement ingest-folder command (recursive)
+- [x] Implement documents list/delete commands
+- [x] Implement reset-profile/reset-all commands
+- [x] Implement config validate/test-providers commands
 
 ## CLI Commands Reference
 
