@@ -89,7 +89,7 @@ class Document(Base):
         nullable=False,
         index=True
     )
-    metadata: Mapped[dict] = mapped_column(JSONB, default=dict, nullable=False)
+    document_metadata: Mapped[dict] = mapped_column(JSONB, default=dict, nullable=False)
     
     # Relationships
     profile: Mapped["Profile"] = relationship("Profile", back_populates="documents")
@@ -132,7 +132,7 @@ class DocumentChunk(Base):
         Vector(1536),  # OpenAI embedding dimension
         nullable=True
     )
-    metadata: Mapped[dict] = mapped_column(JSONB, default=dict, nullable=False)
+    chunk_metadata: Mapped[dict] = mapped_column(JSONB, default=dict, nullable=False)
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         server_default=func.now(),

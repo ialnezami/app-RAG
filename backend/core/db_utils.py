@@ -6,7 +6,7 @@ from typing import List, Optional, Dict, Any
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, update, delete, func, and_, or_
 from sqlalchemy.orm import selectinload
-from pgvector.sqlalchemy import l2_distance, cosine_distance
+# Vector similarity functions will be calculated manually
 
 from .models import Profile, Document, DocumentChunk, ChatSession, ChatMessage
 
@@ -200,7 +200,7 @@ class DocumentChunkRepository:
                 )
             )
             .order_by(
-                cosine_distance(DocumentChunk.embedding, query_embedding)
+                DocumentChunk.embedding.cosine_distance(query_embedding)
             )
             .limit(limit)
         )
@@ -210,7 +210,11 @@ class DocumentChunkRepository:
         filtered_chunks = []
         for chunk in chunks:
             if chunk.embedding:
-                similarity = 1 - cosine_distance(chunk.embedding, query_embedding)
+                # Calculate cosine similarity manually
+                import numpy as np
+                embedding_array = np.array(chunk.embedding)
+                query_array = np.array(query_embedding)
+                similarity = float(np.dot(embedding_array, query_array) / (np.linalg.norm(embedding_array) * np.linalg.norm(query_array)))
                 if similarity >= similarity_threshold:
                     chunk.metadata = chunk.metadata or {}
                     chunk.metadata["similarity"] = float(similarity)

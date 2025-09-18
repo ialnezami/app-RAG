@@ -8,7 +8,7 @@ import logging
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, and_, or_, func, text
 from sqlalchemy.orm import selectinload
-from pgvector.sqlalchemy import cosine_distance, l2_distance
+# Using manual similarity calculation instead of pgvector functions
 
 from .database import get_db
 from .models import DocumentChunk, Document, Profile
