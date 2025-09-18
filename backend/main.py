@@ -12,7 +12,7 @@ from fastapi.staticfiles import StaticFiles
 import uvicorn
 
 from core.database import init_db, close_db, check_db_health
-from api.routes import health, profiles, documents, chat
+from api.routes import health, profiles, documents, chat, auth, analytics
 from api.websocket import chat as ws_chat
 
 
@@ -127,9 +127,11 @@ async def global_exception_handler(request, exc):
 
 # Include routers
 app.include_router(health.router, tags=["Health"])
+app.include_router(auth.router, prefix="/api/v1", tags=["Authentication"])
 app.include_router(profiles.router, prefix="/api/v1", tags=["Profiles"])
 app.include_router(documents.router, prefix="/api/v1", tags=["Documents"])
 app.include_router(chat.router, prefix="/api/v1", tags=["Chat"])
+app.include_router(analytics.router, prefix="/api/v1", tags=["Analytics"])
 
 # WebSocket endpoint
 app.add_websocket_route("/ws", ws_chat.websocket_endpoint)
