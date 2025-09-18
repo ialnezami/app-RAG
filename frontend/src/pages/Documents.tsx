@@ -6,7 +6,7 @@ import DocumentUpload from '../components/Documents/DocumentUpload'
 import ProfileSelector from '../components/Profiles/ProfileSelector'
 
 const Documents: React.FC = () => {
-  const { profiles, setProfiles, currentProfile } = useAppStore()
+  const { profiles, setProfiles } = useAppStore()
 
   useEffect(() => {
     // Load profiles if not already loaded

@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import { 
   FileText, 
-  Download, 
   Trash2, 
   Search, 
-  Filter, 
   RefreshCw, 
   Eye,
   Calendar,
@@ -302,7 +300,7 @@ const DocumentList: React.FC = () => {
                   {/* Document Header */}
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex items-center space-x-3 flex-1 min-w-0">
-                      {getFileTypeIcon(document.mime_type)}
+                      {getFileTypeIcon(document.mime_type || null)}
                       <div className="flex-1 min-w-0">
                         <h3 className="text-sm font-medium text-gray-900 truncate">
                           {document.original_filename}
@@ -337,9 +335,9 @@ const DocumentList: React.FC = () => {
                         {formatFileSize(document.file_size)}
                       </div>
                     )}
-                    {document.document_metadata && Object.keys(document.document_metadata).length > 0 && (
+                    {document.metadata && Object.keys(document.metadata).length > 0 && (
                       <div className="text-xs text-gray-500">
-                        {Object.entries(document.document_metadata).slice(0, 2).map(([key, value]) => (
+                        {Object.entries(document.metadata).slice(0, 2).map(([key, value]) => (
                           <div key={key} className="flex">
                             <span className="font-medium">{key}:</span>
                             <span className="ml-1 truncate">{String(value)}</span>
@@ -423,7 +421,6 @@ const DocumentList: React.FC = () => {
         isOpen={showViewer}
         onClose={() => setShowViewer(false)}
         title={selectedDocument?.original_filename || 'Document Viewer'}
-        maxWidth="4xl"
       >
         {selectedDocument && (
           <DocumentViewer document={selectedDocument} />

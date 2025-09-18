@@ -68,8 +68,10 @@ class Settings(BaseSettings):
     def parse_cors_origins(cls, v):
         """Parse CORS origins from string or list."""
         if isinstance(v, str):
-            return [origin.strip() for origin in v.split(",")]
-        return v
+            return [origin.strip() for origin in v.split(",") if origin.strip()]
+        elif isinstance(v, list):
+            return v
+        return ["http://localhost:3000"]
     
     @validator("allowed_file_types", pre=True)
     def parse_allowed_file_types(cls, v):

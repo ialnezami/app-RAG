@@ -68,7 +68,7 @@ const DocumentUpload: React.FC = () => {
     setUploadFiles(prev => [...prev, ...newUploadFiles])
   }, [currentProfile])
 
-  const uploadFile = async (uploadFile: UploadFile) => {
+  const uploadSingleFile = async (uploadFile: UploadFile) => {
     if (!currentProfile) return
 
     try {
@@ -126,7 +126,7 @@ const DocumentUpload: React.FC = () => {
   const uploadAllFiles = () => {
     uploadFiles
       .filter(f => f.status === 'pending')
-      .forEach(uploadFile)
+      .forEach(uploadSingleFile)
   }
 
   const handleDragOver = (e: React.DragEvent) => {
@@ -314,7 +314,7 @@ const DocumentUpload: React.FC = () => {
                   <div className="flex items-center space-x-2 ml-4">
                     {uploadFile.status === 'pending' && (
                       <Button
-                        onClick={() => uploadFile(uploadFile)}
+                        onClick={() => uploadSingleFile(uploadFile)}
                         size="sm"
                         variant="primary"
                       >
@@ -323,7 +323,7 @@ const DocumentUpload: React.FC = () => {
                     )}
                     {uploadFile.status === 'error' && (
                       <Button
-                        onClick={() => uploadFile(uploadFile)}
+                        onClick={() => uploadSingleFile(uploadFile)}
                         size="sm"
                         variant="primary"
                       >
