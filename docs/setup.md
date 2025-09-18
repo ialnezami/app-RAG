@@ -1,123 +1,285 @@
-# Setup Instructions
+# 🚀 Setup Guide
 
-## Prerequisites
+## Full-Stack RAG Application Setup
 
-- Docker and Docker Compose
-- Git
-- Node.js 18+ (for local development)
-- Python 3.11+ (for local development)
+This guide will help you set up the RAG (Retrieval-Augmented Generation) application on your local machine or production environment.
 
-## Quick Start
+## 📋 Prerequisites
 
-1. **Clone the repository**
-   ```bash
-   git clone <repository-url>
-   cd rag-fullstack
-   ```
+### System Requirements
+- **Operating System**: macOS, Linux, or Windows with WSL2
+- **Docker**: Version 20.0 or higher
+- **Docker Compose**: Version 2.0 or higher
+- **Git**: Latest version
+- **Memory**: Minimum 8GB RAM (16GB recommended)
+- **Storage**: At least 10GB free space
 
-2. **Copy environment template**
-   ```bash
-   cp .env.example .env
-   ```
+### Required API Keys
+You'll need at least one of the following API keys:
+- **OpenAI API Key** (Recommended): For GPT models and embeddings
+- **Google API Key**: For Gemini models
+- **Anthropic API Key**: For Claude models
 
-3. **Edit environment variables**
-   ```bash
-   nano .env
-   ```
-   
-   Add your API keys:
-   - `OPENAI_API_KEY`: Your OpenAI API key
-   - `GOOGLE_API_KEY`: Your Google API key (optional)
-   - `ANTHROPIC_API_KEY`: Your Anthropic API key (optional)
+## 🛠️ Installation Steps
 
-4. **Start the development environment**
-   ```bash
-   docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build
-   ```
-
-5. **Initialize the database**
-   ```bash
-   docker exec -it rag-fullstack-backend-1 python cli.py init-db
-   docker exec -it rag-fullstack-backend-1 python cli.py init-profiles
-   ```
-
-6. **Access the application**
-   - Frontend: http://localhost:3000
-   - Backend API: http://localhost:8000
-   - API Documentation: http://localhost:8000/docs
-
-## Development Commands
-
-### Start services
+### 1. Clone the Repository
 ```bash
-# All services
-docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
-
-# Specific services
-docker-compose up db backend
+git clone <repository-url>
+cd app\ RAG
 ```
 
-### View logs
+### 2. Environment Configuration
 ```bash
-docker-compose logs -f backend
-docker-compose logs -f frontend
+# Copy the environment template
+cp .env.example .env
+
+# Edit the environment file
+nano .env
 ```
 
-### Execute CLI commands
+**Required Environment Variables:**
 ```bash
-docker exec -it rag-fullstack-backend-1 python cli.py <command>
+# Database Configuration
+POSTGRES_HOST=db
+POSTGRES_PORT=5432
+POSTGRES_DB=rag_db
+POSTGRES_USER=rag_user
+POSTGRES_PASSWORD=secure_password_change_in_production
+
+# API Keys (At least one required)
+OPENAI_API_KEY=sk-your-openai-key-here
+GOOGLE_API_KEY=AI-your-google-key-here
+ANTHROPIC_API_KEY=sk-ant-your-anthropic-key-here
+
+# Application Configuration
+BACKEND_PORT=8000
+FRONTEND_PORT=3000
+SECRET_KEY=your-secret-key-change-in-production
+ENVIRONMENT=development
+
+# Optional Features
+ENABLE_AUTH=false
+ENABLE_RATE_LIMITING=true
+LOG_LEVEL=INFO
+
+# File Upload Settings
+MAX_FILE_SIZE=10485760
+ALLOWED_FILE_TYPES=pdf,docx,txt,md
+
+# AI Provider Settings
+DEFAULT_EMBEDDING_PROVIDER=openai
+DEFAULT_EMBEDDING_MODEL=text-embedding-3-small
+EMBEDDING_DIMENSIONS=1536
+
+# Development Settings
+DEBUG=true
+RELOAD=true
+CORS_ORIGINS=http://localhost:3000,http://localhost:5173
 ```
 
-### Database access
+### 3. Start the Application
+
+#### Development Environment
 ```bash
-docker exec -it rag-fullstack-db-1 psql -U rag_user -d rag_db
+# Start all services
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up --build
+
+# Or start in detached mode
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
 ```
 
-### Run tests
+#### Production Environment
 ```bash
-docker exec -it rag-fullstack-backend-1 pytest
+# Start production services
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build
 ```
 
-## Production Deployment
+### 4. Initialize the Database
+```bash
+# Initialize database tables
+docker exec -it apprag-backend-1 python cli.py init-db
 
-1. **Use production compose file**
-   ```bash
-   docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
-   ```
+# Create default AI profiles
+docker exec -it apprag-backend-1 python cli.py init-profiles
 
-2. **Setup SSL certificates** (recommended)
-   - Use Let's Encrypt or your certificate provider
-   - Update nginx configuration with your domain
+# Check system status
+docker exec -it apprag-backend-1 python cli.py status
+```
 
-3. **Set production environment variables**
-   ```bash
-   export ENVIRONMENT=production
-   export SECRET_KEY="your-production-secret"
-   ```
+### 5. Verify Installation
+```bash
+# Check if all services are running
+docker-compose ps
 
-4. **Initialize production database**
-   ```bash
-   docker exec -it rag-fullstack-backend-1 python cli.py init-db
-   docker exec -it rag-fullstack-backend-1 python cli.py init-profiles
-   ```
+# Test backend health
+curl http://localhost:8000/health
 
-## Troubleshooting
+# Test frontend (should return HTML)
+curl http://localhost:3000
+```
+
+## 🌐 Access the Application
+
+Once setup is complete, you can access:
+
+- **Frontend Web UI**: http://localhost:3000
+- **Backend API**: http://localhost:8000
+- **API Documentation**: http://localhost:8000/docs
+- **Database**: localhost:5432 (if needed for direct access)
+
+## 📁 First-Time Usage
+
+### 1. Create Your First Profile
+```bash
+# Via CLI
+docker exec -it apprag-backend-1 python cli.py profiles create "My Assistant" --provider openai --model gpt-4o-mini
+
+# Or use the web interface at http://localhost:3000/profiles
+```
+
+### 2. Upload Documents
+```bash
+# Via CLI
+docker exec -it apprag-backend-1 python cli.py ingest 1 /path/to/document.pdf
+
+# Or use the web interface at http://localhost:3000/documents
+```
+
+### 3. Start Chatting
+- Navigate to http://localhost:3000/chat
+- Select your profile
+- Ask questions about your uploaded documents
+
+## 🔧 Configuration Options
+
+### AI Provider Configuration
+Edit `backend/config/config.json` to customize AI providers and models:
+
+```json
+{
+  "ai_providers": {
+    "openai": {
+      "base_url": "https://api.openai.com/v1",
+      "models": {
+        "gpt-4o-mini": {
+          "max_tokens": 4000,
+          "temperature": 0.7
+        }
+      }
+    }
+  }
+}
+```
+
+### Database Configuration
+The application uses PostgreSQL with pgvector extension for vector similarity search. Database settings are configured via environment variables.
+
+### File Upload Limits
+- **Max file size**: 10MB (configurable via `MAX_FILE_SIZE`)
+- **Supported formats**: PDF, DOCX, TXT, MD
+- **Storage**: Files are stored in Docker volumes
+
+## 🔍 Troubleshooting
 
 ### Common Issues
 
-1. **Port conflicts**: Change ports in `.env` file
-2. **API key errors**: Verify API keys are correctly set
-3. **Database connection**: Check if PostgreSQL container is running
-4. **Build failures**: Clear Docker cache: `docker system prune -a`
+#### Port Already in Use
+```bash
+# Kill processes using the ports
+lsof -ti:3000 | xargs kill -9
+lsof -ti:8000 | xargs kill -9
 
-### Health Checks
+# Or change ports in .env file
+FRONTEND_PORT=3001
+BACKEND_PORT=8001
+```
 
-- Backend: http://localhost:8000/health
-- Frontend: http://localhost:3000/health
-- Database: `docker exec -it rag-fullstack-db-1 pg_isready`
+#### Docker Issues
+```bash
+# Restart Docker
+docker-compose down
+docker-compose up --build
 
-### Logs
+# Clean Docker system
+docker system prune -a
+```
 
-- Backend logs: `docker-compose logs backend`
-- Frontend logs: `docker-compose logs frontend`
-- Database logs: `docker-compose logs db`
+#### Database Connection Issues
+```bash
+# Check database health
+docker exec -it apprag-db-1 pg_isready -U rag_user -d rag_db
+
+# View database logs
+docker-compose logs db
+```
+
+#### API Key Issues
+- Verify API keys are correctly set in `.env`
+- Check API key permissions and quotas
+- Test API keys with provider's official tools
+
+### Log Analysis
+```bash
+# View all logs
+docker-compose logs
+
+# View specific service logs
+docker-compose logs backend
+docker-compose logs frontend
+docker-compose logs db
+
+# Follow logs in real-time
+docker-compose logs -f backend
+```
+
+## 🔒 Security Considerations
+
+### Development
+- Default passwords are used for development
+- Debug mode is enabled
+- CORS is permissive
+
+### Production
+- Change all default passwords
+- Set strong `SECRET_KEY`
+- Configure proper CORS origins
+- Enable HTTPS with SSL certificates
+- Set `ENVIRONMENT=production`
+- Disable debug mode (`DEBUG=false`)
+
+## 📞 Support
+
+### Getting Help
+- Check the [Troubleshooting Guide](troubleshooting.md)
+- Review the [API Documentation](api.md)
+- Check Docker logs for error messages
+- Ensure all prerequisites are met
+
+### Common Commands
+```bash
+# Restart services
+docker-compose restart
+
+# Update application
+git pull
+docker-compose build --no-cache
+docker-compose up -d
+
+# Backup database
+docker exec apprag-db-1 pg_dump -U rag_user rag_db > backup.sql
+
+# Reset application data
+docker exec -it apprag-backend-1 python cli.py reset-all
+```
+
+## ✅ Next Steps
+
+After successful setup:
+1. Read the [User Guide](user-guide.md)
+2. Explore the [API Documentation](api.md)
+3. Check the [Development Guide](development.md) if you plan to modify the code
+4. Review the [Deployment Guide](deployment.md) for production deployment
+
+---
+
+**Setup Complete!** 🎉 Your RAG application is now ready to use.
