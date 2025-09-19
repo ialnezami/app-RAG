@@ -12,7 +12,8 @@ import {
   AlertTriangle,
   CheckCircle,
   Clock,
-  Zap
+  Zap,
+  Settings
 } from 'lucide-react'
 import { apiService } from '../../services/api'
 import Button from '../Common/Button'

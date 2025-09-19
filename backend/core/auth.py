@@ -2,8 +2,7 @@
 Authentication and authorization utilities.
 """
 import os
-import jwt
-from jose import JWTError
+from jose import jwt, JWTError
 from datetime import datetime, timedelta
 from typing import Optional, Dict, Any
 from passlib.context import CryptContext
@@ -41,7 +40,7 @@ def verify_token(token: str) -> Optional[Dict[str, Any]]:
         settings = get_settings()
         payload = jwt.decode(token, settings.secret_key, algorithms=["HS256"])
         return payload
-    except (jwt.PyJWTError, JWTError):
+    except JWTError:
         return None
 
 def hash_password(password: str) -> str:
