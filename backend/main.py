@@ -12,6 +12,7 @@ from fastapi.staticfiles import StaticFiles
 import uvicorn
 
 from core.database import init_db, close_db, check_db_health
+from core.middleware import RateLimitMiddleware, SecurityHeadersMiddleware, RequestLoggingMiddleware, MetricsMiddleware
 from api.routes import health, profiles, documents, chat, auth, analytics
 from api.websocket import chat as ws_chat
 
@@ -62,6 +63,20 @@ app = FastAPI(
     redoc_url="/redoc",
     lifespan=lifespan
 )
+
+# Custom middleware (order matters - first added is outermost)
+app.add_middleware(SecurityHeadersMiddleware)
+app.add_middleware(RequestLoggingMiddleware)
+
+# Create global metrics middleware instance
+metrics_middleware = MetricsMiddleware(app)
+app.add_middleware(MetricsMiddleware)
+
+# Rate limiting (configurable)
+if os.getenv("ENABLE_RATE_LIMITING", "true").lower() == "true":
+    rate_limit_calls = int(os.getenv("RATE_LIMIT_CALLS", "100"))
+    rate_limit_period = int(os.getenv("RATE_LIMIT_PERIOD", "60"))
+    app.add_middleware(RateLimitMiddleware, calls=rate_limit_calls, period=rate_limit_period)
 
 # CORS middleware
 cors_origins_env = os.getenv("CORS_ORIGINS", "http://localhost:3000")
@@ -135,6 +150,12 @@ app.include_router(analytics.router, prefix="/api/v1", tags=["Analytics"])
 
 # WebSocket endpoint
 app.add_websocket_route("/ws", ws_chat.websocket_endpoint)
+
+# Metrics endpoint
+@app.get("/metrics")
+async def get_metrics():
+    """Get application metrics."""
+    return metrics_middleware.get_metrics()
 
 # Static files (for uploaded files)
 if os.path.exists("uploads"):

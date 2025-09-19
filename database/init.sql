@@ -1,6 +1,28 @@
 -- Enable pgvector extension
 CREATE EXTENSION IF NOT EXISTS vector;
 
+-- Users table for authentication
+CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(100) UNIQUE NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    full_name VARCHAR(255),
+    hashed_password VARCHAR(255) NOT NULL,
+    is_active BOOLEAN DEFAULT TRUE NOT NULL,
+    is_superuser BOOLEAN DEFAULT FALSE NOT NULL,
+    role VARCHAR(50) DEFAULT 'user' NOT NULL,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW() NOT NULL,
+    last_login TIMESTAMP WITH TIME ZONE,
+    CONSTRAINT ck_users_role CHECK (role IN ('admin', 'user', 'guest'))
+);
+
+-- Indexes for users table
+CREATE INDEX IF NOT EXISTS idx_users_username ON users(username);
+CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
+CREATE INDEX IF NOT EXISTS idx_users_role ON users(role);
+CREATE INDEX IF NOT EXISTS idx_users_role_active ON users(role, is_active);
+
 -- Profiles table
 CREATE TABLE profiles (
     id SERIAL PRIMARY KEY,

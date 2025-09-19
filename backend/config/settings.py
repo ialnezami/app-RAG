@@ -48,6 +48,10 @@ class Settings(BaseSettings):
     )
     upload_dir: str = Field(default="uploads", env="UPLOAD_DIR")
     
+    # Authentication
+    enable_auth: bool = Field(default=False, env="ENABLE_AUTH")
+    token_expire_hours: int = Field(default=24, env="TOKEN_EXPIRE_HOURS")
+    
     # AI Settings
     default_embedding_provider: str = Field(default="openai", env="DEFAULT_EMBEDDING_PROVIDER")
     default_embedding_model: str = Field(default="text-embedding-3-small", env="DEFAULT_EMBEDDING_MODEL")
